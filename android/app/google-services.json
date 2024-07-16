@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191348750805",
+    "project_id": "ahorrobolillos",
+    "storage_bucket": "ahorrobolillos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191348750805:android:6b40b389d8572b7e51655c",
+        "android_client_info": {
+          "package_name": "com.bolillo.ahorro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_OnbV_8G2sPC9uB0cixcWKxpP6GvRwpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
