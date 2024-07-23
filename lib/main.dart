@@ -34,8 +34,12 @@ class AuthenticationWrapper extends StatelessWidget {
         }
         if (snapshot.hasData) {
           User? user = snapshot.data;
-          String displayName = user?.displayName ?? user?.email ?? 'Usuario'; // Nombre de usuario o correo electrónico si el nombre no está disponible
-          return principal(email: displayName); // Redirige a la pantalla principal pasando el nombre
+          String displayName = user?.displayName ?? user?.email ?? 'Usuario';
+          String userId = user?.uid ?? ''; // Obtener el ID del usuario
+          return Principal(
+            email: displayName, // Pasar el nombre del usuario o correo electrónico
+            userId: userId, // Pasar el ID del usuario
+          );
         }
         return LoginScreen(); // Redirige a la pantalla de inicio de sesión si el usuario no está autenticado
       },

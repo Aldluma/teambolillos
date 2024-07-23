@@ -76,7 +76,7 @@ class FirebaseService {
       String name, String lastName, String email, String password) async {
     try {
       await _firestore.collection("usuarios").add({
-        "nombre": name,
+        "name": name,
         "apellido": lastName,
         "email": email,
         "password": password,

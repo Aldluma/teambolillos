@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_team_odaa/BD/firebase_service.dart';
 import 'package:flutter_team_odaa/pantallas/principal.dart';
-
 import 'package:flutter_team_odaa/pantallas/registroUser.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,16 +27,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
       try {
         print('Intentando iniciar sesión con: $email');
-        User? user =
-            await FirebaseService.signInWithEmailAndPassword(email, password);
+        User? user = await FirebaseService.signInWithEmailAndPassword(email, password);
 
         if (user != null) {
-          print(
-              'Inicio de sesión exitoso. Navegando a la pantalla principal...');
+          String userId = user.uid; // Obtener el userId
+          print('Inicio de sesión exitoso. Navegando a la pantalla principal...');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => principal(email: user.email ?? '')),
+              builder: (context) => Principal(
+                email: user.email ?? '',
+                userId: userId,
+              ),
+            ),
           );
         } else {
           print('Error: Usuario no encontrado.');
@@ -53,24 +55,20 @@ class _LoginScreenState extends State<LoginScreen> {
             errorMessage = 'El usuario ha sido deshabilitado.';
             break;
           case 'user-not-found':
-            errorMessage =
-                'Usuario no encontrado. Regístrate para crear una cuenta.';
+            errorMessage = 'Usuario no encontrado. Regístrate para crear una cuenta.';
             break;
           case 'wrong-password':
-            errorMessage =
-                'Contraseña incorrecta. Por favor, intenta de nuevo.';
+            errorMessage = 'Contraseña incorrecta. Por favor, intenta de nuevo.';
             break;
           default:
-            errorMessage =
-                'Datos ingresados incorrectamente.\n Por favor, intenta de nuevo.';
+            errorMessage = 'Datos ingresados incorrectamente.\n Por favor, intenta de nuevo.';
             break;
         }
         print('FirebaseAuthException: $errorMessage');
         _showErrorDialog(errorMessage);
       } catch (e) {
         print('Error al iniciar sesión: $e');
-        _showErrorDialog(
-            'Datos ingresados incorrectamente');
+        _showErrorDialog('Datos ingresados incorrectamente');
       }
     }
   }

@@ -84,19 +84,32 @@ class _RegistroUserState extends State<registroUser> {
                 _buildTextField('Contraseña', Icons.lock, _passwordController, true, isPassword: true),
                 SizedBox(height: 10),
                 _buildTextField('Confirmar contraseña', Icons.lock, _confirmPasswordController, true, isPassword: true),
-                SizedBox(height: 20),
+                SizedBox(height: 50),
                 ElevatedButton(
                   onPressed: _showConfirmationDialog,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink,
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                    padding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: Text(
-                    'Continuar',
-                    style: TextStyle(fontSize: 18),
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF56194F), Color(0xFFD46059)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Continuar',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    ),
                   ),
                 ),
               ],
