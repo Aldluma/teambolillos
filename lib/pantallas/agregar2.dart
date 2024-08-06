@@ -41,10 +41,23 @@ class _PersonaFormScreenState extends State<PersonaFormScreen> {
 
   Future<void> _submitForm() async {
     List<Map<String, dynamic>> users = [];
+
+    double quantityPerUser;
+    try {
+      quantityPerUser = double.parse(_quantityController.text);
+    } catch (e) {
+      quantityPerUser = 0.0; // Manejo de error si la conversión falla
+    }
+
     for (int i = 0; i < widget.numberOfUsers; i++) {
       String name = _nameControllers[i].text.trim();
       if (name.isNotEmpty) {
-        users.add({'name': name});
+        users.add({
+          'name': name,
+          'quantity_per_user': quantityPerUser,
+          'abonado': 0.0,
+          'prestado':0.0
+        });
       }
     }
 
@@ -53,13 +66,6 @@ class _PersonaFormScreenState extends State<PersonaFormScreen> {
         DocumentReference noteRef = FirebaseFirestore.instance
             .collection('notes')
             .doc(widget.noteId);
-
-        double quantityPerUser;
-        try {
-          quantityPerUser = double.parse(_quantityController.text);
-        } catch (e) {
-          quantityPerUser = 0.0; // Manejo de error si la conversión falla
-        }
 
         // Actualizar la nota con los usuarios, la cantidad por usuario y el ID del usuario que creó la nota
         await noteRef.update({
