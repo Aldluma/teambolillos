@@ -352,13 +352,13 @@ void _showTutorial() {
     builder: (BuildContext context) {
       int currentIndex = 0;
       List<String> imagePaths = [
-        'assets/images/tutorial1.png',
-        'assets/images/tutorial2.png',
-        'assets/images/tutorial3.png',
-        'assets/images/tutorial4.png',
-        'assets/images/tutorial5.png',
-        'assets/images/tutorial6.png',
-        'assets/images/tutorial7.png',
+        'assets/images/cattuto_1.png',
+        'assets/images/cattuto_2.png',
+        'assets/images/cattuto_3.png',
+        'assets/images/cattuto_4.png',
+        'assets/images/cattuto_5.png',
+        'assets/images/cattuto_6.png',
+        'assets/images/cattuto_7.png',
       ];
 
       return StatefulBuilder(
@@ -372,10 +372,6 @@ void _showTutorial() {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Paso ${currentIndex + 1}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
                 SizedBox(height: 10),
                 Image.asset(imagePaths[currentIndex]), // Mostrar la imagen correspondiente
               ],

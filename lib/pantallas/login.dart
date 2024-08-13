@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _showErrorDialog('Datos ingresados incorrectamente');
       }
     }
-  }
+  }/*
   void _showTutorial() {
   showDialog(
     context: context,
@@ -152,23 +152,23 @@ class _LoginScreenState extends State<LoginScreen> {
       );
     },
   );
-}
+}*/
 
-/*
+
   void _showTutorial() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         int currentIndex = 0;
         List<String> imagePaths = [
-          'assets/images/tutorial1.png',
-          'assets/images/tutorial2.png',
-          'assets/images/tutorial3.png',
-          'assets/images/tutorial4.png',
-          'assets/images/tutorial5.png',
-          'assets/images/tutorial6.png',
-          'assets/images/tutorial7.png',
-          'assets/images/tutorial8.png',
+          'assets/images/cattuto_1.png',
+          'assets/images/cattuto_2.png',
+          'assets/images/cattuto_3.png',
+          'assets/images/cattuto_4.png',
+          'assets/images/cattuto_5.png',
+          'assets/images/cattuto_6.png',
+          'assets/images/cattuto_7.png',
+          'assets/images/cattuto_8.png',
         ];
 
         return StatefulBuilder(
@@ -182,10 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Paso ${currentIndex + 1}',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
                   SizedBox(height: 10),
                   Image.asset(imagePaths[currentIndex]),
                 ],
@@ -200,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                   ),
-                if (currentIndex < 7)
+                if (currentIndex < 6)
                   TextButton(
                     child: Text("Siguiente"),
                     onPressed: () {
@@ -209,14 +205,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                   ),
-                if (currentIndex == 7)
+                if (currentIndex == 6)
                   TextButton(
                     child: Text("Finalizar"),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
                   ),
-                if (currentIndex < 7)
+                if (currentIndex < 6)
                   TextButton(
                     child: Text("Salir"),
                     onPressed: () {
@@ -229,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
-  }*/
+  }
 
   void _showErrorDialog(String message) {
     showDialog(
