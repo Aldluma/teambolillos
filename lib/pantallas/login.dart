@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_team_odaa/BD/firebase_service.dart';
 import 'package:flutter_team_odaa/pantallas/principal.dart';
 import 'package:flutter_team_odaa/pantallas/registroUser.dart';
@@ -27,11 +28,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
       try {
         print('Intentando iniciar sesión con: $email');
-        User? user = await FirebaseService.signInWithEmailAndPassword(email, password);
+        User? user =
+            await FirebaseService.signInWithEmailAndPassword(email, password);
 
         if (user != null) {
           String userId = user.uid; // Obtener el userId
-          print('Inicio de sesión exitoso. Navegando a la pantalla principal...');
+          print(
+              'Inicio de sesión exitoso. Navegando a la pantalla principal...');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -55,13 +58,16 @@ class _LoginScreenState extends State<LoginScreen> {
             errorMessage = 'El usuario ha sido deshabilitado.';
             break;
           case 'user-not-found':
-            errorMessage = 'Usuario no encontrado. Regístrate para crear una cuenta.';
+            errorMessage =
+                'Usuario no encontrado. Regístrate para crear una cuenta.';
             break;
           case 'wrong-password':
-            errorMessage = 'Contraseña incorrecta. Por favor, intenta de nuevo.';
+            errorMessage =
+                'Contraseña incorrecta. Por favor, intenta de nuevo.';
             break;
           default:
-            errorMessage = 'Datos ingresados incorrectamente.\n Por favor, intenta de nuevo.';
+            errorMessage =
+                'Datos ingresados incorrectamente.\n Por favor, intenta de nuevo.';
             break;
         }
         print('FirebaseAuthException: $errorMessage');
@@ -72,6 +78,158 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
+  void _showTutorial() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      int currentIndex = 0;
+      List<String> imagePaths = [
+        'assets/images/tutorial1.png',
+        'assets/images/tutorial2.png',
+        'assets/images/tutorial3.png',
+        'assets/images/tutorial4.png',
+        'assets/images/tutorial5.png',
+        'assets/images/tutorial6.png',
+        'assets/images/tutorial7.png',
+        'assets/images/tutorial8.png',
+      ];
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 240, 194, 194),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            title: Text('Tutorial (${currentIndex + 1}/8)'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Paso ${currentIndex + 1}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Image.asset(imagePaths[currentIndex]),
+              ],
+            ),
+            actions: <Widget>[
+              if (currentIndex > 0)
+                TextButton(
+                  child: Text("Anterior"),
+                  onPressed: () {
+                    setState(() {
+                      currentIndex--;
+                    });
+                  },
+                ),
+              if (currentIndex < 7)
+                TextButton(
+                  child: Text("Siguiente"),
+                  onPressed: () {
+                    setState(() {
+                      currentIndex++;
+                    });
+                  },
+                ),
+              if (currentIndex == 7)
+                TextButton(
+                  child: Text("Finalizar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              if (currentIndex < 7)
+                TextButton(
+                  child: Text("Salir"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+/*
+  void _showTutorial() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        int currentIndex = 0;
+        List<String> imagePaths = [
+          'assets/images/tutorial1.png',
+          'assets/images/tutorial2.png',
+          'assets/images/tutorial3.png',
+          'assets/images/tutorial4.png',
+          'assets/images/tutorial5.png',
+          'assets/images/tutorial6.png',
+          'assets/images/tutorial7.png',
+          'assets/images/tutorial8.png',
+        ];
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Color.fromARGB(255, 240, 194, 194),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              title: Text('Tutorial (${currentIndex + 1}/8)'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Paso ${currentIndex + 1}',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Image.asset(imagePaths[currentIndex]),
+                ],
+              ),
+              actions: <Widget>[
+                if (currentIndex > 0)
+                  TextButton(
+                    child: Text("Anterior"),
+                    onPressed: () {
+                      setState(() {
+                        currentIndex--;
+                      });
+                    },
+                  ),
+                if (currentIndex < 7)
+                  TextButton(
+                    child: Text("Siguiente"),
+                    onPressed: () {
+                      setState(() {
+                        currentIndex++;
+                      });
+                    },
+                  ),
+                if (currentIndex == 7)
+                  TextButton(
+                    child: Text("Finalizar"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                if (currentIndex < 7)
+                  TextButton(
+                    child: Text("Salir"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }*/
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -323,7 +481,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : const SizedBox.shrink(),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 10),
                       Center(
                         child: Container(
                           width: MediaQuery.of(context).size.width * 0.5,
@@ -399,6 +557,36 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                          height: 1), // Espacio entre el botón y el texto
+                      Center(
+                        child: TextButton(
+                          onPressed:
+                              _showTutorial, // Asegúrate de definir este método
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'Instrucciones de uso',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                               // Espacio entre el texto y el ícono
+                              IconButton(
+                                icon: const Icon(Icons.help_outline,
+                                    color: Colors.black),
+                                onPressed: _showTutorial,
+                              ),
+                            ],
                           ),
                         ),
                       ),

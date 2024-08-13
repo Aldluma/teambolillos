@@ -120,10 +120,21 @@ class _PrincipalState extends State<Principal> {
       ),
       child: Column(
         children: [
-          Text(
-            'AHORROS',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'AHORROS',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              IconButton(
+                icon: Icon(Icons.help_outline, color: Colors.black),
+                onPressed: () {
+                  _showTutorial();
+                },
+              ),
+            ],
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
@@ -302,81 +313,6 @@ class _PrincipalState extends State<Principal> {
       ),
     );
   }
-/*
-void _showConfirmationDialog(String title, String content, VoidCallback onConfirm) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0), // Esquinas redondeadas
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFAA405B), Color(0xFF441A24)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white, // Color del texto del título
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 15),
-              Text(
-                content,
-                style: TextStyle(
-                  color: Colors.white70, // Color del texto del contenido
-                  fontSize: 18,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  TextButton(
-                    child: Text(
-                      'Cancelar',
-                      style: TextStyle(
-                        color: Colors.white, // Color del texto del botón Cancelar
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: Text(
-                      'Aceptar',
-                      style: TextStyle(
-                        color: Colors.redAccent, // Color del texto del botón Aceptar
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      onConfirm();
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-*/
 
   void _showConfirmationDialog(
       String title, String content, VoidCallback onConfirm) {
@@ -388,40 +324,17 @@ void _showConfirmationDialog(String title, String content, VoidCallback onConfir
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0), // Esquinas redondeadas
           ),
-          title: Text(
-            title,
-            style: TextStyle(
-              color: Colors.black, // Color del texto del título
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Text(
-            content,
-            style: TextStyle(
-              color: Colors.black87, // Color del texto del contenido
-              fontSize: 18,
-            ),
-          ),
+          title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(content),
           actions: <Widget>[
             TextButton(
-              child: Text(
-                'Cancelar',
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 0, 0, 0), // Color del texto del botón Cancelar
-                ),
-              ),
+              child: Text("Cancelar"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text(
-                'Aceptar',
-                style: TextStyle(
-                  color: Colors.red, // Color del texto del botón Aceptar
-                ),
-              ),
+              child: Text("Confirmar"),
               onPressed: () {
                 Navigator.of(context).pop();
                 onConfirm();
@@ -432,4 +345,79 @@ void _showConfirmationDialog(String title, String content, VoidCallback onConfir
       },
     );
   }
+
+void _showTutorial() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      int currentIndex = 0;
+      List<String> imagePaths = [
+        'assets/images/tutorial1.png',
+        'assets/images/tutorial2.png',
+        'assets/images/tutorial3.png',
+        'assets/images/tutorial4.png',
+        'assets/images/tutorial5.png',
+        'assets/images/tutorial6.png',
+        'assets/images/tutorial7.png',
+      ];
+
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 240, 194, 194),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            title: Text('Tutorial (${currentIndex + 1}/7)'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Paso ${currentIndex + 1}',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Image.asset(imagePaths[currentIndex]), // Mostrar la imagen correspondiente
+              ],
+            ),
+            actions: <Widget>[
+              if (currentIndex > 0)
+                TextButton(
+                  child: Text("Anterior"),
+                  onPressed: () {
+                    setState(() {
+                      currentIndex--;
+                    });
+                  },
+                ),
+              if (currentIndex < 6)
+                TextButton(
+                  child: Text("Siguiente"),
+                  onPressed: () {
+                    setState(() {
+                      currentIndex++;
+                    });
+                  },
+                ),
+              if (currentIndex == 6)
+                TextButton(
+                  child: Text("Finalizar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              if (currentIndex < 6)
+                TextButton(
+                  child: Text("Salir"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 }
