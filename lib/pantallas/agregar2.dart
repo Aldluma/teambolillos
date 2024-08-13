@@ -56,62 +56,146 @@ class _PersonaFormScreenState extends State<PersonaFormScreen> {
           'name': name,
           'quantity_per_user': quantityPerUser,
           'abonado': 0.0,
-          'prestado':0.0
+          'prestado': 0.0,
         });
       }
     }
 
     if (users.length == widget.numberOfUsers) {
       try {
-        DocumentReference noteRef = FirebaseFirestore.instance
-            .collection('notes')
-            .doc(widget.noteId);
+        DocumentReference noteRef =
+            FirebaseFirestore.instance.collection('notes').doc(widget.noteId);
 
-        // Actualizar la nota con los usuarios, la cantidad por usuario y el ID del usuario que creó la nota
         await noteRef.update({
           'users': users,
           'quantity_per_user': quantityPerUser,
-          'created_by': widget.userId, // Guardar el ID del usuario que creó la nota
+          'created_by': widget.userId,
         });
 
-        // Guardar cada usuario en una subcolección 'personas' dentro de la nota
         for (var user in users) {
           await noteRef.collection('personas').add(user);
         }
 
-        // Mostrar diálogo de éxito
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Éxito'),
-              content: Text('Datos guardados exitosamente.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Aceptar'),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Cierra el diálogo
-                    Navigator.of(context).popUntil((route) => route.isFirst); // Regresa a la pantalla principal
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        _showSuccessDialog();
       } catch (e) {
         print('Error al guardar los datos: $e');
-        // Mostrar mensaje de error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al guardar los datos')),
-        );
+        _showErrorDialog(
+            'Error', 'Error al guardar los datos. Inténtalo de nuevo.');
       }
     } else {
       print('Por favor complete todos los campos');
-      // Mostrar mensaje de advertencia
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Por favor complete todos los campos')),
-      );
+      _showErrorDialog(
+          'Campos incompletos', 'Por favor complete todos los campos.');
     }
+  }
+
+  void _showErrorDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.deepOrange[100], // Color de fondo
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0), // Bordes redondeados
+          ),
+          title: Row(
+            mainAxisSize:
+                MainAxisSize.min, // Ajustar el tamaño del Row al contenido
+            children: [
+              Icon(
+                Icons.error, // Cambia el icono según tus necesidades
+                color: Color.fromARGB(255, 204, 0, 0), // Color del icono
+                size: 30.0, // Tamaño del icono
+              ),
+              SizedBox(width: 8), // Espacio entre el icono y el texto
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  color: Color.fromARGB(255, 204, 0, 0), // Color del título
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontSize: 15.0,
+              color: Colors.black, // Color del mensaje
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, // Color del texto del botón
+                backgroundColor: Colors.deepOrange, // Color de fondo del botón
+              ),
+              child: Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                size: 60,
+                color: Colors.green,
+              ),
+              SizedBox(width: 8), // Espacio entre el texto y el icono
+              Text(
+                '¡Éxito!',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          content: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+              'Los datos se han guardado exitosamente.',
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black54,
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.deepOrange, // Color del texto del botón
+              ),
+              child: Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).popUntil((route) =>
+                    route.isFirst); // Regresa a la pantalla principal
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -128,8 +212,8 @@ class _PersonaFormScreenState extends State<PersonaFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: Text('Persona Form'),
+        backgroundColor: Color(0xFFFEA775),
+        title: Text('Integrantes del ahorro'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -137,67 +221,111 @@ class _PersonaFormScreenState extends State<PersonaFormScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                '¡Bienvenido, ${widget.email}!',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 32.0),
-              Container(
-                width: double.infinity,
-                constraints: BoxConstraints(maxWidth: 600),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    ...List.generate(widget.numberOfUsers, (index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: TextField(
-                          controller: _nameControllers[index],
-                          decoration: InputDecoration(
-                            labelText: 'Nombre del usuario ${index + 1}',
-                            fillColor: Colors.white,
-                            filled: true,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFAA405B), Color(0xFF441A24)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    '¡Bienvenido, ${widget.email}!',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    width: double.infinity,
+                    constraints: BoxConstraints(maxWidth: 600),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ...List.generate(widget.numberOfUsers, (index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nombre del usuario ${index + 1}',
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8.0),
+                                TextField(
+                                  controller: _nameControllers[index],
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'Ingrese el nombre del ahorrador ${index + 1}',
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      borderSide:
+                                          BorderSide(color: Colors.orange),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        SizedBox(height: 16.0),
+                        Center(
+                          child: Text(
+                            'Cantidad por usuario:\n${_quantityController.text}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                      );
-                    }),
-                    SizedBox(height: 16.0),
-                    Text(
-                      'Cantidad por usuario:\n${_quantityController.text}',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center, // Centra el texto
-                    ),
-                    SizedBox(height: 32.0),
-                    ElevatedButton(
-                      onPressed: _submitForm,
-                      child: Text('Guardar'),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.deepOrange,
-                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
+                        SizedBox(height: 20.0),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: _submitForm,
+                            child: Text('Guardar'),
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.deepOrange,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 32.0, vertical: 12.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

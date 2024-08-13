@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_team_odaa/pantallas/login.dart';
 import 'package:flutter_team_odaa/pantallas/principal.dart';
+import 'package:flutter_team_odaa/session/NavigatorObserver.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [InactivityObserver()],
       home: AuthenticationWrapper(),
     );
   }
